@@ -1,4 +1,5 @@
-﻿using HeboTech.ATLib.DTOs;
+﻿using HeboTech.ATLib.CodingSchemes;
+using HeboTech.ATLib.DTOs;
 using HeboTech.ATLib.Events;
 using HeboTech.ATLib.Parsers;
 using System;
@@ -193,7 +194,7 @@ namespace HeboTech.ATLib.Modems
         /// <param name="message">The message body</param>
         /// <param name="smsTextFormat">Text or PDU format</param>
         /// <returns>Command status with SMS reference</returns>
-        Task<ModemResponse<SmsReference>> SendSmsAsync(PhoneNumber phoneNumber, string message, SmsTextFormat smsTextFormat);
+        Task<ModemResponse<SmsReference>> SendSmsAsync(PhoneNumber phoneNumber, string message, SmsTextFormat smsTextFormat, CodingScheme codingSchemes = CodingScheme.GSM7);
 
         /// <summary>
         /// Sends an USSD code. Results in an UssdResponseReceived event

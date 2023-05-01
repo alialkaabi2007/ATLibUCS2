@@ -184,13 +184,26 @@ namespace HeboTech.ATLib.Modems.Generic
             return ModemResponse.Success(response.Success);
         }
 
-        public virtual async Task<ModemResponse<SmsReference>> SendSmsAsync(PhoneNumber phoneNumber, string message, SmsTextFormat smsTextFormat, bool includeEmptySmscLength = true)
+        public virtual async Task<ModemResponse<SmsReference>> SendSmsAsync(PhoneNumber phoneNumber, string message, SmsTextFormat smsTextFormat, CodingScheme codingSchemes, bool includeEmptySmscLength = true)
         {
             switch (smsTextFormat)
             {
                 case SmsTextFormat.PDU:
                     {
-                        string pdu = Pdu.EncodeSmsSubmit(phoneNumber, Gsm7.Encode(message), Gsm7.DataCodingSchemeCode, includeEmptySmscLength);
+                        string pdu;
+                        switch (codingSchemes)
+                        {
+                            case CodingScheme.UCS2:
+                                pdu = Pdu.EncodeSmsSubmit(phoneNumber, UCS2.Encode(message), UCS2.DataCodingSchemeCode, includeEmptySmscLength);
+                                break;
+                            case CodingScheme.ANSI:
+                                pdu = Pdu.EncodeSmsSubmit(phoneNumber, Ansi.Encode(message), Ansi.DataCodingSchemeCode, includeEmptySmscLength);
+                                break;
+                            default:
+                                pdu = Pdu.EncodeSmsSubmit(phoneNumber, Gsm7.Encode(message), Gsm7.DataCodingSchemeCode, includeEmptySmscLength);
+                                break;
+                        }
+
                         string cmd1 = $"AT+CMGS={(pdu.Length)/ 2}";
                         string cmd2 = pdu;
                         AtResponse response = await channel.SendSmsAsync(cmd1, cmd2, "+CMGS:", TimeSpan.FromSeconds(30));
