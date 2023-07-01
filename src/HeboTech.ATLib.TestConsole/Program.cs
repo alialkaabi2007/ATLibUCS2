@@ -23,12 +23,12 @@ namespace HeboTech.ATLib.TestConsole
 
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            string pin = args[0];
+            string pin = "0000";
 
 
 
             /* ######## UNCOMMENT THIS SECTION TO USE SERIAL PORT ######## */
-            using SerialPort serialPort = new("COM1", 9600, Parity.None, 8, StopBits.One)
+            using SerialPort serialPort = new("COM24", 115200, Parity.None, 8, StopBits.One)
             {
                 Handshake = Handshake.RequestToSend
             };
